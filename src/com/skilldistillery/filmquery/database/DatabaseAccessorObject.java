@@ -51,6 +51,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			  film.setRating(rs.getString("rating"));
 			  film.setSpecialFeatures(rs.getString("special_features"));
 			  rs.close();
+			  film.setAllActorsInFilm(findActorsByFilmId(filmId));
 			  return film;
 		  }
 	  }
@@ -89,8 +90,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
   @Override
   public List<Actor> findActorsByFilmId(int filmId) { 
 	  String query = "SELECT actor.id, actor.first_name, actor.last_name FROM actor"
-	  		+ " JOIN film_actor ON  actor.id = film_actor.id"
-	  		+ " JOIN film ON film_actor.id = film.id WHERE film_id = ?";
+	  		+ " JOIN film_actor ON  actor.id = film_actor.actor_id"
+	  		+ " JOIN film ON film_actor.film_id = film.id WHERE film_id = ?"
+	  		+ " ORDER BY actor.id";
 	  
 	  List<Actor> actors = new ArrayList<Actor>();
 	  try (Connection conn = DriverManager.getConnection(URL, user, pass);
