@@ -24,23 +24,27 @@ public class FilmQueryApp {
 
 	private void launch() {
 		Scanner input = new Scanner(System.in);
-
-		int userOption = startUserInterface(input);
-		switch (userOption) {
-		case (1):
-			System.out.println("Option 1 Selected");
-			break;
-		case (2):
-			System.out.println("Option 2 Selected");
-			break;
-		case (3):
-			System.out.println("Goodbye!");
-			break;
+		boolean keepGoing = true;
+		while (keepGoing) {
+			int userOption = startUserInterface(input);
+			switch (userOption) {
+			case (1):
+				lookupByFilmId(input);
+				break;
+			case (2):
+				lookupByKeyword(input);
+				break;
+			case (3):
+				System.out.println();
+				System.out.println("Goodbye!");
+				keepGoing = false;
+				break;
+			}
 		}
-
 		input.close();
 	}
 
+	
 	private int startUserInterface(Scanner input) {
 		System.out.println("1) Look up a film by ID #");
 		System.out.println("2) Look up a film by keyword");
@@ -65,5 +69,37 @@ public class FilmQueryApp {
 			}
 		}
 	}
+	
+	
+	private void lookupByFilmId(Scanner input) {
+		System.out.println();
+		System.out.print("Enter the ID # of the film you would like to lookup: ");
+		int userInput = 0;
+		boolean validEntry = false;
+		while (!validEntry) {
+			try {
+				userInput = input.nextInt();
+				input.nextLine();
+				Film film = db.findFilmById(userInput);
+				if (film == null) {
+					System.out.println("No film was found with ID # of: " + userInput);
+					validEntry = true;
+				}
+				else {
+					System.out.println("Title: " + film.getTitle() + " -- Release Year: " + film.getReleaseYear() + " -- Rating: " + film.getRating() + " -- Description: " + film.getDescription());
+					validEntry = true;
+				}
+				System.out.println();
+			}
+			catch (InputMismatchException e) {
+				System.out.print("Invalid Entry - Please enter a whole number: ");
+				input.nextLine();
+			}
+		}
+	}
 
+	
+	private void lookupByKeyword(Scanner input) {
+		
+	}
 }
