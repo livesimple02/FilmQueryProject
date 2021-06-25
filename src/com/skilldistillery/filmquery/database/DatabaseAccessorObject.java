@@ -82,12 +82,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public List<Actor> findActorsByFilmId(int filmId) {
+	public ArrayList<Actor> findActorsByFilmId(int filmId) {
 		String query = "SELECT actor.id, actor.first_name, actor.last_name FROM actor"
 				+ " JOIN film_actor ON  actor.id = film_actor.actor_id"
 				+ " JOIN film ON film_actor.film_id = film.id WHERE film_id = ?" + " ORDER BY actor.id";
 
-		List<Actor> actors = new ArrayList<Actor>();
+		ArrayList<Actor> actors = new ArrayList<Actor>();
 		try (Connection conn = DriverManager.getConnection(URL, user, pass);
 				PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -99,6 +99,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				actor.setId(rs.getInt("id"));
 				actor.setFirstName(rs.getString("first_name"));
 				actor.setLastName(rs.getString("last_name"));
+				actors.add(actor);
 			}
 			rs.close();
 			return actors;

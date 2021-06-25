@@ -82,9 +82,8 @@ public class FilmQueryApp {
 					System.out.println("No film was found with ID # of: " + userInput);
 					validEntry = true;
 				} else {
-					System.out.println("Title: " + film.getTitle() + " -- Release Year: " + film.getReleaseYear()
-							+ " -- Rating: " + film.getRating() + " -- Description: " + film.getDescription()
-							+ " -- Language: " + db.findLanguageNameByLanguageId(film.getLanguageId()));
+					System.out.println(film.getPartialDetails() + " -- Language: " + db.findLanguageNameByLanguageId(film.getLanguageId()));
+					film.printActorsInFilm();
 					validEntry = true;
 				}
 				System.out.println();
@@ -106,9 +105,8 @@ public class FilmQueryApp {
 					System.out.println("No film was found with the keyword: " + userInput);
 				} else {
 					for (Film film : films) {
-						System.out.println("Title: " + film.getTitle() + " -- Release Year: " + film.getReleaseYear()
-						+ " -- Rating: " + film.getRating() + " -- Description: " + film.getDescription()
-						+ " -- Language: " + db.findLanguageNameByLanguageId(film.getLanguageId()));
+						System.out.println(film.getPartialDetails() + " -- Language: " + db.findLanguageNameByLanguageId(film.getLanguageId()));
+						film.printActorsInFilm();
 					}
 				}
 				System.out.println();

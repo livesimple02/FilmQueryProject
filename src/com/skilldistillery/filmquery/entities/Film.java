@@ -1,6 +1,6 @@
 package com.skilldistillery.filmquery.entities;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Film {
 	private int id;
@@ -14,7 +14,7 @@ public class Film {
 	private double replacementCost;
 	private String rating;
 	private String specialFeatures;
-	private List<Actor> actorsInFilm;
+	private ArrayList<Actor> actorsInFilm = new ArrayList<Actor>();
 	
 	public Film() {
 		
@@ -87,18 +87,32 @@ public class Film {
 		this.specialFeatures = specialFeatures;
 	}
 
-	public List<Actor> getActorsInFilm() {
+	public ArrayList<Actor> getActorsInFilm() {
 		return actorsInFilm;
 	}
 
-	public void setAllActorsInFilm(List<Actor> actorsInFilm) {
-		this.actorsInFilm = actorsInFilm;
+	public void setAllActorsInFilm(ArrayList<Actor> actorsInFilm) {
+		this.actorsInFilm.addAll(actorsInFilm);
 	}
 	
 	public void addActorInFilm(Actor actor) {
 		this.actorsInFilm.add(actor);
 	}
 
+	// return Title, release year, rating, description
+	public String getPartialDetails() {
+		return ("Title: " + title + " -- Release Year: " + releaseYear
+		+ " -- Rating: " + rating + " -- Description: " + description);
+	}
+	
+	// prints actors for film
+	public void printActorsInFilm() {
+		System.out.println("\tActors In Film:");
+		for (Actor actor : actorsInFilm) {
+			System.out.println("\t\t" + actor);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Film ID: " + id + "\n Title: " + title + "\n Description: " + description + "\n Release Year: " + releaseYear
