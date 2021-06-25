@@ -1,6 +1,7 @@
 package com.skilldistillery.filmquery.app;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.skilldistillery.filmquery.database.DatabaseAccessor;
@@ -44,7 +45,6 @@ public class FilmQueryApp {
 		input.close();
 	}
 
-	
 	private int startUserInterface(Scanner input) {
 		System.out.println("1) Look up a film by ID #");
 		System.out.println("2) Look up a film by keyword");
@@ -58,19 +58,16 @@ public class FilmQueryApp {
 				if (userSelection > 0 && userSelection < 4) {
 					input.nextLine();
 					return userSelection;
-				}
-				else {
+				} else {
 					throw new InputMismatchException();
 				}
-			} 
-			catch (InputMismatchException e) {
+			} catch (InputMismatchException e) {
 				System.out.print("Invalid Entry - Please try again: ");
 				input.nextLine();
 			}
 		}
 	}
-	
-	
+
 	private void lookupByFilmId(Scanner input) {
 		System.out.println();
 		System.out.print("Enter the ID # of the film you would like to lookup: ");
@@ -84,22 +81,36 @@ public class FilmQueryApp {
 				if (film == null) {
 					System.out.println("No film was found with ID # of: " + userInput);
 					validEntry = true;
-				}
-				else {
-					System.out.println("Title: " + film.getTitle() + " -- Release Year: " + film.getReleaseYear() + " -- Rating: " + film.getRating() + " -- Description: " + film.getDescription());
+				} else {
+					System.out.println("Title: " + film.getTitle() + " -- Release Year: " + film.getReleaseYear()
+							+ " -- Rating: " + film.getRating() + " -- Description: " + film.getDescription()
+							+ " -- Language: " + db.findLanguageNameByLanguageId(film.getLanguageId()));
 					validEntry = true;
 				}
 				System.out.println();
-			}
-			catch (InputMismatchException e) {
+			} catch (InputMismatchException e) {
 				System.out.print("Invalid Entry - Please enter a whole number: ");
 				input.nextLine();
 			}
 		}
 	}
 
-	
 	private void lookupByKeyword(Scanner input) {
-		
+		System.out.println();
+		System.out.print("Enter the keyword you would like to search for: ");
+
+				String userInput = input.nextLine();
+				List<Film> films = db.findFilmsByKeywordInTitleOrDesc(userInput);
+				
+				if (films.size() == 0) {
+					System.out.println("No film was found with the keyword: " + userInput);
+				} else {
+					for (Film film : films) {
+						System.out.println("Title: " + film.getTitle() + " -- Release Year: " + film.getReleaseYear()
+						+ " -- Rating: " + film.getRating() + " -- Description: " + film.getDescription()
+						+ " -- Language: " + db.findLanguageNameByLanguageId(film.getLanguageId()));
+					}
+				}
+				System.out.println();
 	}
 }
