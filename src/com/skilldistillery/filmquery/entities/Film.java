@@ -1,6 +1,7 @@
 package com.skilldistillery.filmquery.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Film {
 	private int id;
@@ -14,97 +15,131 @@ public class Film {
 	private double replacementCost;
 	private String rating;
 	private String specialFeatures;
-	private ArrayList<Actor> actorsInFilm = new ArrayList<Actor>();
-	
+	private List<Actor> actorsInFilm = new ArrayList<>();
+	private List<String> categories = new ArrayList<>();
+
 	public Film() {
-		
+
 	}
-	
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public Integer getReleaseYear() {
 		return releaseYear;
 	}
+
 	public void setReleaseYear(Integer releaseYear) {
 		this.releaseYear = releaseYear;
 	}
+
 	public int getLanguageId() {
 		return languageId;
 	}
+
 	public void setLanguageId(int languageId) {
 		this.languageId = languageId;
 	}
+
 	public int getRentalDuration() {
 		return rentalDuration;
 	}
+
 	public void setRentalDuration(int rentalDuration) {
 		this.rentalDuration = rentalDuration;
 	}
+
 	public double getRentalRate() {
 		return rentalRate;
 	}
+
 	public void setRentalRate(double rentalRate) {
 		this.rentalRate = rentalRate;
 	}
+
 	public Integer getLength() {
 		return length;
 	}
+
 	public void setLength(Integer length) {
 		this.length = length;
 	}
+
 	public double getReplacementCost() {
 		return replacementCost;
 	}
+
 	public void setReplacementCost(double replacementCost) {
 		this.replacementCost = replacementCost;
 	}
+
 	public String getRating() {
 		return rating;
 	}
+
 	public void setRating(String rating) {
 		this.rating = rating;
 	}
+
 	public String getSpecialFeatures() {
 		return specialFeatures;
 	}
+
 	public void setSpecialFeatures(String specialFeatures) {
 		this.specialFeatures = specialFeatures;
 	}
 
-	public ArrayList<Actor> getActorsInFilm() {
+	public List<Actor> getActorsInFilm() {
 		return actorsInFilm;
 	}
 
-	public void setAllActorsInFilm(ArrayList<Actor> actorsInFilm) {
+	public void setAllActorsInFilm(List<Actor> actorsInFilm) {
 		this.actorsInFilm.addAll(actorsInFilm);
 	}
-	
+
 	public void addActorInFilm(Actor actor) {
 		this.actorsInFilm.add(actor);
+	}
+	
+	public List<String> getCategories() {
+		return categories;
+	}
+
+	public void setAllCategories(List<String> categories) {
+		this.categories.addAll(categories);
+	}
+	
+	public void addCategory(String category) {
+		this.categories.add(category);
 	}
 
 	// return Title, release year, rating, description
 	public String getPartialDetails() {
-		return ("Title: " + title + " -- Release Year: " + releaseYear
-		+ " -- Rating: " + rating + " -- Description: " + description);
+		return ("Title: " + title + " -- Release Year: " + releaseYear + " -- Rating: " + rating + " -- Description: "
+				+ description);
 	}
-	
+
 	// prints actors for film
 	public void printActorsInFilm() {
 		System.out.println("\tActors In Film:");
@@ -112,13 +147,13 @@ public class Film {
 			System.out.println("\t\t" + actor);
 		}
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Film ID: " + id + "\n Title: " + title + "\n Description: " + description + "\n Release Year: " + releaseYear
-				+ "\n Language ID: " + languageId + "\n Rental Duration: " + rentalDuration + "\n Rental Rate: " + rentalRate
-				+ "\n Length: " + length + "\n Replacement Cost: " + replacementCost + "\n Rating: " + rating
-				+ "\n Special Features: " + specialFeatures;
+		return "Film ID: " + id + "\n Title: " + title + "\n Description: " + description + "\n Release Year: "
+				+ releaseYear + "\n Language ID: " + languageId + "\n Rental Duration: " + rentalDuration
+				+ "\n Rental Rate: " + rentalRate + "\n Length: " + length + "\n Replacement Cost: " + replacementCost
+				+ "\n Rating: " + rating + "\n Special Features: " + specialFeatures;
 	}
 
 	@Override
@@ -193,10 +228,5 @@ public class Film {
 			return false;
 		return true;
 	}
-	
-	
-	
-	
-	
-	
+
 }

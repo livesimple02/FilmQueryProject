@@ -6,10 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
+import com.skilldistillery.filmquery.entities.Inventory;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 
@@ -50,6 +53,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setSpecialFeatures(rs.getString("special_features"));
 				rs.close();
 				film.setAllActorsInFilm(findActorsByFilmId(filmId));
+				film.setAllCategories(findCategoriesByFilmId(filmId));
 				return film;
 			}
 		} catch (SQLException e) {
@@ -82,12 +86,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public ArrayList<Actor> findActorsByFilmId(int filmId) {
+	public List<Actor> findActorsByFilmId(int filmId) {
 		String query = "SELECT actor.id, actor.first_name, actor.last_name FROM actor"
 				+ " JOIN film_actor ON  actor.id = film_actor.actor_id"
 				+ " JOIN film ON film_actor.film_id = film.id WHERE film_id = ?" + " ORDER BY actor.id";
 
-		ArrayList<Actor> actors = new ArrayList<Actor>();
+		List<Actor> actors = new ArrayList<>();
 		try (Connection conn = DriverManager.getConnection(URL, user, pass);
 				PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -129,8 +133,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return result;
 	}
 
+	@Override
 	public List<Film> findFilmsByKeywordInTitleOrDesc(String keyword) {
-		List<Film> films = new ArrayList<Film>();
+		List<Film> films = new ArrayList<>();
 		String query = "SELECT * FROM film WHERE title LIKE ? OR description LIKE ? ORDER BY id";
 		try (Connection conn = DriverManager.getConnection(URL, user, pass);
 				PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -161,6 +166,51 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			e.printStackTrace();
 		}
 		return films;
+	}
+	
+	@Override
+	public List<String> findCategoriesByFilmId(int filmId) {
+		List<String> categories = new ArrayList<>();
+		String query = "SELECT category.name FROM category JOIN film_category ON category.id = film_category.category_id JOIN film ON film_category.film_id = film.id WHERE film.id = ?";
+		try (Connection conn = DriverManager.getConnection(URL, user, pass);
+				PreparedStatement stmt = conn.prepareStatement(query)) {
+
+			stmt.setInt(1, filmId);
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				categories.add(rs.getString("name"));
+			}
+			rs.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return categories;
+	}
+	
+	@Override
+	public Inventory findInventoryByFilmId(int filmId) {
+		String query = "SELECT DISTINCT inventory_item.media_condition, COUNT(IFNULL(inventory_item.media_condition,1)) FROM inventory_item JOIN film ON inventory_item.film_id = film.id WHERE film.id = ? GROUP BY inventory_item.media_condition";
+		Map<String, Integer> inventory = new HashMap<>();
+		try (Connection conn = DriverManager.getConnection(URL, user, pass);
+				PreparedStatement stmt = conn.prepareStatement(query)) {
+
+			stmt.setInt(1, filmId);
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				inventory.put(rs.getString("media_condition"), rs.getInt(2));
+			}
+			rs.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Inventory inventoryForFilm = new Inventory();
+		inventoryForFilm.addAllToInventory(inventory);
+		inventoryForFilm.setFilmId(filmId);
+		return inventoryForFilm;
 	}
 
 }
